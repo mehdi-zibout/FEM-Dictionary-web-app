@@ -78,7 +78,7 @@ const data = {
 };
 
 function App() {
-  const [searchFor, setSearchFor] = useState("keyboard");
+  const [searchFor, setSearchFor] = useState("");
   const [showNoResults, setShowNoResults] = useState(false);
   const [font, setFont] = useState<"font-sans" | "font-serif" | "font-mono">(
     () => {
@@ -91,7 +91,7 @@ function App() {
         return localFont;
       } else {
         localStorage.setItem("font", "font-sans");
-        return "font-serif";
+        return "font-sans";
       }
     }
   );
