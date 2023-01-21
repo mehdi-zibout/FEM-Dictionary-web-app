@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import PlayButton from "./components/PlayButton";
 
 function App() {
   useEffect(() => {
@@ -13,8 +14,9 @@ function App() {
     }
   }, []);
   return (
-    <div className="bg-white dark:bg-black min-h-screen text-white text-hl font-mono">
+    <div className="bg-white min-h-screen text-white text-hl font-mono">
       Hello World!
+      <PlayButton />
     </div>
   );
 }
