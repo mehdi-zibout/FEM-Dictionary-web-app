@@ -1,9 +1,25 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import DarkModeButton from "./components/DarkModeButton";
 import PlayButton from "./components/PlayButton";
 import SearchInput from "./components/SearchInput";
+import SelectFont from "./components/SelectFont";
 
 function App() {
+  const [font, setFont] = useState<"font-sans" | "font-serif" | "font-mono">(
+    () => {
+      const localFont = localStorage.font as string;
+      if (
+        localFont === "font-sans" ||
+        localFont === "font-serif" ||
+        localFont === "font-mono"
+      ) {
+        return localFont;
+      } else {
+        localStorage.setItem("font", "font-sans");
+        return "font-sans";
+      }
+    }
+  );
   useEffect(() => {
     if (
       localStorage.theme === "dark" ||
@@ -14,9 +30,22 @@ function App() {
     } else {
       document.documentElement.classList.remove("dark");
     }
+    const localFont = localStorage.font;
+    if (
+      localFont === "sans serif" ||
+      localFont === "serif" ||
+      localFont === "mono"
+    ) {
+      setFont(localFont);
+    }
   }, []);
   return (
-    <main className="transition-colors duration-500 bg-white dark:bg-black min-h-screen text-white ">
+    <main
+      className={
+        "transition-colors duration-500 bg-white dark:bg-black min-h-screen text-black-200 dark:text-white " +
+        font
+      }
+    >
       Hello World!
       <PlayButton />
       <DarkModeButton />
@@ -25,6 +54,9 @@ function App() {
       </div>
       <div className="p-6">
         <SearchInput error />
+      </div>
+      <div className="p-5">
+        <SelectFont font={font} setFont={setFont} />
       </div>
     </main>
   );
