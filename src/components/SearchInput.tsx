@@ -1,16 +1,39 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { IconSearch } from "./Icons";
 
-function SearchInput({ error }: { error?: boolean }) {
+function SearchInput({
+  searchFor,
+  setSearchFor,
+}: {
+  searchFor: string;
+  setSearchFor: Dispatch<SetStateAction<string>>;
+}) {
   const [searchValue, setSearchValue] = useState("");
+  const [error, setError] = useState(false);
+  useEffect(() => {
+    if (searchValue !== searchFor) {
+      setSearchValue(searchFor);
+    }
+  }, [searchFor]);
   return (
     <div className="">
       <div
-        className={`${
+        className={`mt-[51.5px] mb-[45px] tablet:mb-[43px] my-6  ${
           error ? "border-red border" : "border-purple"
         }  focus-within:border px-6 py-5 flex justify-between items-center w-full rounded-2xl bg-white-100 dark:bg-black-100`}
       >
         <input
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              setSearchFor(searchValue);
+            }
+          }}
+          onBlur={() => {
+            if (searchValue) {
+              setSearchFor(searchValue);
+            }
+          }}
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
           placeholder="Search for any word…"
