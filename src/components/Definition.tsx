@@ -36,6 +36,7 @@ function Definition({
     if (!apiRes.ok) {
       setSearchFor("");
       setDidntFindIt(true);
+      throw new Error("cant find it");
     }
     setDidntFindIt(false);
     return apiRes.json();
