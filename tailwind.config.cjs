@@ -3,6 +3,10 @@ module.exports = {
   darkMode: "class",
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
+    screens: {
+      tablet: "600px",
+      desktop: "1000px",
+    },
     colors: {
       purple: "#A445ED",
       red: "#FF5252",

@@ -1,17 +1,27 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { SetStateAction, Dispatch } from "react";
 import { IconArrowDown } from "./Icons";
 
 function SelectFont({ font, setFont }: SelectFontProps) {
   const [showDropdown, setShowDropdown] = useState(false);
+  useEffect(() => {
+    if (showDropdown) {
+      window.addEventListener("click", () => {
+        setShowDropdown(false);
+      });
+    }
+  }, [showDropdown]);
   return (
-    <div className="relative">
+    <div
+      onClick={(e) => e.stopPropagation()}
+      className="relative border-r  mr-[1.625rem] w-fit pr-[1.625rem] font-bold   border-white-200"
+    >
       <button
         onClick={() => setShowDropdown(!showDropdown)}
         className="flex justify-center items-center"
         aria-label="change font"
       >
-        <h5 className="mr-[1.125rem] text-bodym">
+        <h5 className="text-right  mr-[1.125rem] text-bodym">
           {font === "font-mono"
             ? "Mono"
             : font === "font-sans"
@@ -21,7 +31,7 @@ function SelectFont({ font, setFont }: SelectFontProps) {
         <IconArrowDown className="mt-0.5" />
       </button>
       {showDropdown && (
-        <ul className="absolute top-10 -left-10 p-6 rounded-2xl text-bodym  dark:bg-black-100 bg-white shadow-[0px_5px_30px_rgba(0,0,0,0.1)] dark:shadow-[0px_5px_30px_rgb(164,69,237)] w-fit">
+        <ul className="absolute top-10 right-10 p-6 rounded-2xl text-bodym  dark:bg-black-100 bg-white shadow-[0px_5px_30px_rgba(0,0,0,0.1)] dark:shadow-[0px_5px_30px_rgb(164,69,237)] w-[11.25rem]">
           <li className="font-sans hover:text-purple">
             <button onClick={() => handleChangeFont("font-sans")}>
               Sans Serif
@@ -42,6 +52,7 @@ function SelectFont({ font, setFont }: SelectFontProps) {
   function handleChangeFont(font: "font-sans" | "font-serif" | "font-mono") {
     localStorage.setItem("font", font);
     setFont(font);
+    setShowDropdown(false);
   }
 }
 
