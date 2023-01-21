@@ -121,6 +121,7 @@ function App() {
         font
       }
     >
+      <h1 className="hidden">Search for any word</h1>
       <div className="desktop:w-[46.06rem] mx-auto w-full">
         <Navbar font={font} setFont={setFont} />
         <SearchInput

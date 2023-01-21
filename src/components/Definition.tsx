@@ -84,7 +84,10 @@ function Definition({
           <h4 className="text-hs text-white-300 mb-[25px]">Meaning</h4>
           <ul className="list-disc pl-10 marker:bg-red marker:text-purple  list-outside">
             {meaning.definitions.map((definition, index) => (
-              <li key={definition.definition + index} className="pl-4 mb-3">
+              <li
+                key={definition.definition + index}
+                className="pl-4 mb-3 text-bodym"
+              >
                 {definition.definition}
                 {definition?.example && (
                   <div className="mt-3 text-white-300 text-bodym">

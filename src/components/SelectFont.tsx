@@ -21,13 +21,13 @@ function SelectFont({ font, setFont }: SelectFontProps) {
         className="flex justify-center items-center"
         aria-label="change font"
       >
-        <h5 className="text-right  mr-[1.125rem] text-bodym">
+        <div className="text-right  mr-[1.125rem] text-bodym">
           {font === "font-mono"
             ? "Mono"
             : font === "font-sans"
             ? "Sans Serif"
             : "Serif"}
-        </h5>
+        </div>
         <IconArrowDown className="mt-0.5" />
       </button>
       {showDropdown && (
