@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import DarkModeButton from "./components/DarkModeButton";
 import PlayButton from "./components/PlayButton";
+import SearchInput from "./components/SearchInput";
 
 function App() {
   useEffect(() => {
@@ -15,10 +16,16 @@ function App() {
     }
   }, []);
   return (
-    <main className="transition-colors duration-500 bg-white dark:bg-black min-h-screen text-white text-hl font-mono">
+    <main className="transition-colors duration-500 bg-white dark:bg-black min-h-screen text-white ">
       Hello World!
       <PlayButton />
       <DarkModeButton />
+      <div className="p-6">
+        <SearchInput />
+      </div>
+      <div className="p-6">
+        <SearchInput error />
+      </div>
     </main>
   );
 }
