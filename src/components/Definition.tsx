@@ -1,12 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import type { Dispatch, SetStateAction } from "react";
-import fetchWord from "../fetchWord";
 import { IconNewWindow } from "./Icons";
 import PlayButton from "./PlayButton";
 
 type DefinitionProps = {
   word: string;
-  phonetics: { text: string; audio: string }[];
+  phonetics?: { text: string; audio: string }[];
   sourceUrls: string[];
   meanings: {
     partOfSpeech: "noun";
@@ -28,18 +27,19 @@ function Definition({
   searchFor: string;
   setSearchFor: Dispatch<SetStateAction<string>>;
 }) {
-  if (searchFor === "") return <div className=""></div>;
-  const result = useQuery([searchFor], fetchWord);
+  const result = useQuery<DefinitionProps[]>([searchFor], async () => {
+    const apiRes = await fetch(
+      `https://api.dictionaryapi.dev/api/v2/entries/en/${searchFor}`
+    );
+    if (!apiRes.ok) throw new Error("couldnt find it");
+
+    return apiRes.json();
+  });
   if (result.isLoading) return <div className="">Loading</div>;
   if (result.isError) return <div className="">Error</div>;
-  console.log(result.data[0], "ohohoh");
-  const {
-    word,
-    phonetics: [phonetic],
-    meanings,
-    sourceUrls,
-  } = result.data[0] as DefinitionProps;
-  const phoneticAudio = new Audio(phonetic.audio);
+  const { word, phonetics, meanings, sourceUrls } = result.data[0];
+  const phonetic = findAudio(phonetics);
+  const phoneticAudio = new Audio(phonetic?.audio);
 
   return (
     <>
@@ -48,7 +48,12 @@ function Definition({
           <h1 className="text-hl">{word}</h1>
           <h6 className="text-hm text-purple mt-2">{phonetic.text}</h6>
         </div>
-        <PlayButton onClick={() => phoneticAudio.play()} />
+        {phonetic.audio && (
+          <PlayButton
+            className="disabled:cursor-not-allowed"
+            onClick={() => phoneticAudio.play()}
+          />
+        )}
       </div>
       {meanings.map((meaning) => (
         <div key={meaning.partOfSpeech} className="mb-10">
@@ -77,10 +82,10 @@ function Definition({
                 <h5 className="text-hs text-white-300 inline-block ">
                   Synonyms
                 </h5>
-                {meaning.synonyms.map((synonym) => (
+                {meaning.synonyms.map((synonym, index) => (
                   <button
                     onClick={() => setSearchFor(synonym)}
-                    key={synonym}
+                    key={synonym + index}
                     className="text-purple font-bold text-hs px-4"
                   >
                     {synonym}
@@ -107,3 +112,20 @@ function Definition({
 }
 
 export default Definition;
+
+function findAudio(
+  phonetics:
+    | {
+        text: string;
+        audio: string;
+      }[]
+    | undefined
+) {
+  if (phonetics && phonetics.length > 0) {
+    for (let index = 0; index < phonetics.length; index++) {
+      if (phonetics[index].audio) return phonetics[index];
+    }
+    return phonetics[0];
+  }
+  return { text: "", audio: "" };
+}

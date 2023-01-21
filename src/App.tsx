@@ -6,7 +6,6 @@ import Navbar from "./components/Navbar";
 import PlayButton from "./components/PlayButton";
 import SearchInput from "./components/SearchInput";
 import SelectFont from "./components/SelectFont";
-import fetchWord from "./fetchWord";
 
 const data = {
   word: "keyboard",
@@ -124,7 +123,10 @@ function App() {
       <div className="desktop:w-[46.06rem] mx-auto w-full">
         <Navbar font={font} setFont={setFont} />
         <SearchInput searchFor={searchFor} setSearchFor={setSearchFor} />
-        <Definition setSearchFor={setSearchFor} searchFor={searchFor} />
+
+        {searchFor && (
+          <Definition setSearchFor={setSearchFor} searchFor={searchFor} />
+        )}
         {/* Hello World!
         <PlayButton />
         <DarkModeButton />

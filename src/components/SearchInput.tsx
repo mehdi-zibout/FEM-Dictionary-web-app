@@ -19,23 +19,30 @@ function SearchInput({
   return (
     <div className="">
       <div
-        className={`mt-[51.5px] mb-[45px] tablet:mb-[43px] my-6  ${
-          error ? "border-red border" : "border-purple"
-        }  focus-within:border px-6 py-5 flex justify-between items-center w-full rounded-2xl bg-white-100 dark:bg-black-100`}
+        className={`mt-[51.5px] border border-opacity-0   my-6  ${
+          error
+            ? "border-red border-opacity-100 "
+            : "border-purple mb-[45px] tablet:mb-[43px]"
+        }  focus-within:border-opacity-100 px-6 py-5 flex justify-between items-center w-full rounded-2xl bg-white-100 dark:bg-black-100`}
       >
         <input
           onKeyDown={(e) => {
             if (e.key === "Enter") {
-              setSearchFor(searchValue);
+              if (searchValue.trim()) {
+                setSearchFor(searchValue.trim());
+              } else setError(true);
             }
           }}
           onBlur={() => {
-            if (searchValue) {
-              setSearchFor(searchValue);
-            }
+            if (searchValue.trim()) {
+              setSearchFor(searchValue.trim());
+            } else setError(true);
           }}
           value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
+          onChange={(e) => {
+            if (error && e.target.value) setError(false);
+            setSearchValue(e.target.value);
+          }}
           placeholder="Search for any word…"
           type="text"
           title="Search"
@@ -45,7 +52,9 @@ function SearchInput({
         <IconSearch />
       </div>
       {error && (
-        <h4 className="text-red text-hs mt-2">Whoops, can’t be empty…</h4>
+        <h4 className="text-red text-hs mt-2 mb-[45px] tablet:mb-[43px]">
+          Whoops, can’t be empty…
+        </h4>
       )}
     </div>
   );
