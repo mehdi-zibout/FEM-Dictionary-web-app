@@ -18,6 +18,12 @@ function SearchInput({
       setSearchValue(searchFor);
     }
   }, [searchFor]);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearchFor(searchValue);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [searchValue]);
   return (
     <div className="">
       <div
