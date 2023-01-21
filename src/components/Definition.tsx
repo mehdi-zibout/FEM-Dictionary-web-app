@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import type { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { IconNewWindow } from "./Icons";
 import PlayButton from "./PlayButton";
 
@@ -23,20 +23,38 @@ type DefinitionProps = {
 function Definition({
   searchFor,
   setSearchFor,
+  setDidntFindIt,
 }: {
   searchFor: string;
   setSearchFor: Dispatch<SetStateAction<string>>;
+  setDidntFindIt: Dispatch<SetStateAction<boolean>>;
 }) {
   const result = useQuery<DefinitionProps[]>([searchFor], async () => {
     const apiRes = await fetch(
       `https://api.dictionaryapi.dev/api/v2/entries/en/${searchFor}`
     );
-    if (!apiRes.ok) throw new Error("couldnt find it");
-
+    if (!apiRes.ok) {
+      setSearchFor("");
+      setDidntFindIt(true);
+    }
+    setDidntFindIt(false);
     return apiRes.json();
   });
-  if (result.isLoading) return <div className="">Loading</div>;
-  if (result.isError) return <div className="">Error</div>;
+  if (result.isLoading)
+    return (
+      <div className="flex justify-center items-center">
+        <div className="animate-spin w-16 h-16 rounded-full border-y border-purple"></div>
+      </div>
+    );
+  if (result.isError)
+    return (
+      <div className="flex flex-col justify-center items-center">
+        <h3 className="text-[64px]">😕</h3>
+        <h1 className="text-black-200 dark:text-white  text-hs mb-6 mt-11">
+          Something wrong happened! try again later.{" "}
+        </h1>
+      </div>
+    );
   const { word, phonetics, meanings, sourceUrls } = result.data[0];
   const phonetic = findAudio(phonetics);
   const phoneticAudio = new Audio(phonetic?.audio);
@@ -55,8 +73,8 @@ function Definition({
           />
         )}
       </div>
-      {meanings.map((meaning) => (
-        <div key={meaning.partOfSpeech} className="mb-10">
+      {meanings.map((meaning, index) => (
+        <div key={meaning.partOfSpeech + index} className="mb-10">
           <div className="flex items-center justify-center my-10">
             <h5 className="text-hm italic pr-5 font-bold ">
               {meaning.partOfSpeech}
@@ -65,8 +83,8 @@ function Definition({
           </div>
           <h4 className="text-hs text-white-300 mb-[25px]">Meaning</h4>
           <ul className="list-disc pl-10 marker:bg-red marker:text-purple  list-outside">
-            {meaning.definitions.map((definition) => (
-              <li key={definition.definition} className="pl-4 mb-3">
+            {meaning.definitions.map((definition, index) => (
+              <li key={definition.definition + index} className="pl-4 mb-3">
                 {definition.definition}
                 {definition?.example && (
                   <div className="mt-3 text-white-300 text-bodym">
@@ -86,7 +104,7 @@ function Definition({
                   <button
                     onClick={() => setSearchFor(synonym)}
                     key={synonym + index}
-                    className="text-purple font-bold text-hs px-4"
+                    className="text-purple font-bold hover:underline text-hs px-4"
                   >
                     {synonym}
                   </button>
@@ -101,7 +119,7 @@ function Definition({
         <a
           target="_blank"
           href={sourceUrls[0]}
-          className="ml-4  dark:text-white text-black"
+          className="tablet:ml-4 mt-2 tablet:mt-0 block tablet:inline-block  dark:text-white text-black"
         >
           {sourceUrls[0]}
           <IconNewWindow className="ml-2 inline-block" />

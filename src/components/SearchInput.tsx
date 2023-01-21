@@ -5,14 +5,16 @@ import { IconSearch } from "./Icons";
 function SearchInput({
   searchFor,
   setSearchFor,
+  setShowNoResults,
 }: {
+  setShowNoResults: Dispatch<SetStateAction<boolean>>;
   searchFor: string;
   setSearchFor: Dispatch<SetStateAction<string>>;
 }) {
   const [searchValue, setSearchValue] = useState("");
   const [error, setError] = useState(false);
   useEffect(() => {
-    if (searchValue !== searchFor) {
+    if (searchValue !== searchFor && searchFor) {
       setSearchValue(searchFor);
     }
   }, [searchFor]);
@@ -40,6 +42,7 @@ function SearchInput({
           }}
           value={searchValue}
           onChange={(e) => {
+            setShowNoResults(false);
             if (error && e.target.value) setError(false);
             setSearchValue(e.target.value);
           }}

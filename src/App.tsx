@@ -79,6 +79,7 @@ const data = {
 
 function App() {
   const [searchFor, setSearchFor] = useState("");
+  const [showNoResults, setShowNoResults] = useState(false);
   const [font, setFont] = useState<"font-sans" | "font-serif" | "font-mono">(
     () => {
       const localFont = localStorage.font as string;
@@ -116,16 +117,37 @@ function App() {
   return (
     <main
       className={
-        "transition-colors    py-14 tablet:px-10 px-6  duration-500 bg-white dark:bg-black min-h-screen text-black-200 dark:text-white " +
+        "transition-colors py-14 tablet:px-10 px-6  duration-500 bg-white dark:bg-black min-h-screen text-black-200 dark:text-white " +
         font
       }
     >
       <div className="desktop:w-[46.06rem] mx-auto w-full">
         <Navbar font={font} setFont={setFont} />
-        <SearchInput searchFor={searchFor} setSearchFor={setSearchFor} />
+        <SearchInput
+          setShowNoResults={setShowNoResults}
+          searchFor={searchFor}
+          setSearchFor={setSearchFor}
+        />
 
         {searchFor && (
-          <Definition setSearchFor={setSearchFor} searchFor={searchFor} />
+          <Definition
+            setDidntFindIt={setShowNoResults}
+            setSearchFor={setSearchFor}
+            searchFor={searchFor}
+          />
+        )}
+        {showNoResults && (
+          <div className="flex flex-col justify-center items-center">
+            <h3 className="text-[64px]">😕</h3>
+            <h1 className="text-black-200 dark:text-white  text-hs mb-6 mt-11">
+              No Definitions Found
+            </h1>
+            <p className="text-white-300 text-bodym text-center">
+              Sorry pal, we couldn't find definitions for the word you were
+              looking for. You can try the search again at later time or head to
+              the web instead.
+            </p>
+          </div>
         )}
         {/* Hello World!
         <PlayButton />
