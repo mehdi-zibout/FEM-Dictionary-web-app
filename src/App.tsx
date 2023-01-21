@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import DarkModeButton from "./components/DarkModeButton";
 import PlayButton from "./components/PlayButton";
 
 function App() {
@@ -14,10 +15,11 @@ function App() {
     }
   }, []);
   return (
-    <div className="bg-white min-h-screen text-white text-hl font-mono">
+    <main className="transition-colors duration-500 bg-white dark:bg-black min-h-screen text-white text-hl font-mono">
       Hello World!
       <PlayButton />
-    </div>
+      <DarkModeButton />
+    </main>
   );
 }
 

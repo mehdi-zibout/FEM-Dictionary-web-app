@@ -92,7 +92,10 @@ export function IconNewWindow(props: SVGProps<SVGSVGElement>) {
   );
 }
 
-export function Moon(props: SVGProps<SVGSVGElement>) {
+export function Moon({
+  isDark,
+  ...props
+}: SVGProps<SVGSVGElement> & { isDark: boolean }) {
   return (
     <svg
       {...props}
@@ -103,7 +106,7 @@ export function Moon(props: SVGProps<SVGSVGElement>) {
     >
       <path
         fill="none"
-        stroke="#838383"
+        stroke={isDark ? "#A445ED" : "#757575"}
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="1.5"
